@@ -1,0 +1,50 @@
+## script que recorre una carpeta y me dice que archivos hay   (.pdf, .jpg, .png, .txt, .docx, .xlsx, .csv)
+
+import os
+import shutil
+## dia 1: comienzo de la ruta
+# print(path.cwd())
+# print(os.getcwd())  # Muestra el directorio actual de trabajo
+
+# listar archivos 
+# print(os.listdir())  # Muestra todos los archivos y carpetas en el directorio actual
+## funcionamiento basico: 
+#archivo = "vasio.jpg"
+#extension = archivo.split(".")[-1]  # Obtiene la extensión del archivo
+#print(extension)
+## avanzado:
+#resultados = {}  # Diccionario para almacenar los resultados
+
+#archivos = ["vasio.jpg", "vasio.pdf", "vasio.docx"]
+#for nombre in archivos:
+#    extension = nombre.split(".")[-1] 
+#    resultados[extension] = resultados.get(extension, []) + [nombre]
+#print (resultados) 
+
+## dia 2 : ruta 
+carpeta= {
+    "pdf" : "PDF",
+    "jpg" : "IMAGENES",
+    "png" : "IMAGENES",
+    "doc" : "DOCUMENTOS",
+    "xlsx" : "HOJAS DE CALCULO",
+    "txt" : "TEXTOS",
+}
+
+source_folder = "carpeta de prueba"
+Files = os.listdir(source_folder) 
+
+for file in Files:
+    extension = file.split(".")[-1] 
+    nombre_carpeta = carpeta.get(extension)
+    if nombre_carpeta is not None:
+        destination_folder = os.path.join("archivos_organizados", carpeta[extension])
+        os.makedirs(destination_folder, exist_ok=True)
+
+        principal = os.path.join(source_folder, file)
+        final = os.path.join(destination_folder, file)
+
+        shutil.move(principal, final)
+
+## ahora todos los archivos de "carpeta de prueba" estan en la carpeta "archivos_organizados".
+# dentro de sus especificaciones de tipo de archivo.
