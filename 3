@@ -1,0 +1,48 @@
+## script que recorre una carpeta y me dice que archivos hay   (.pdf, .jpg, .png, .txt, .docx, .xlsx, .csv)
+
+import os
+import shutil
+import datetime
+
+carpeta= {
+    "pdf" : "PDF",
+    "jpg" : "IMAGENES",
+    "png" : "IMAGENES",
+    "doc" : "DOCUMENTOS",
+    "xlsx" : "HOJAS DE CALCULO",
+    "txt" : "TEXTOS",
+}
+
+source_folder = "carpeta de prueba"
+Files = os.listdir(source_folder) 
+
+for file in Files:
+    extension = file.split(".")[-1] 
+    nombre_carpeta = carpeta.get(extension)
+    if nombre_carpeta is not None:
+        destination_folder = os.path.join("archivos", carpeta[extension])
+        os.makedirs(destination_folder, exist_ok=True)
+
+        timestamp = os.path.getmtime(os.path.join(source_folder, file))
+        modificacion = datetime.datetime.fromtimestamp(timestamp)
+        diferencia = date - modificacion
+      
+        principal = os.path.join(source_folder, file)
+        final = os.path.join(destination_folder, file)
+        
+        if diferencia.days > 30:
+            olvidados = os.path.join("archivos", "OLVIDADOS")
+            os.makedirs(olvidados, exist_ok=True)
+            shutil.move(principal, olvidados)
+        else:
+            shutil.move(principal, final)
+    
+
+#archivo = "archivosPC"
+#timestamp = os.path.getmtime(archivo)
+#date = datetime.datetime.now()
+#modificacion = datetime.datetime.fromtimestamp(timestamp)
+#diferencia = date - modificacion
+#print (date)
+#print (modificacion)
+#print (diferencia)
