@@ -1,0 +1,55 @@
+## script que recorre una carpeta y me dice que archivos hay   (.pdf, .jpg, .png, .txt, .docx, .xlsx, .csv)
+
+import os
+import shutil
+import csv
+from datetime import datetime
+
+carpeta= {
+    "pdf" : "PDF",
+    "jpg" : "IMAGENES",
+    "png" : "IMAGENES",
+    "doc" : "DOCUMENTOS",
+    "xlsx" : "HOJAS DE CALCULO",
+}
+
+source_folder = "carpeta de prueba"
+Files = os.listdir(source_folder) 
+log_path = "log.csv"
+escribir_encabezado= not os.path.exists(log_path)
+with open(log_path, mode = 'a', newline= '', encoding="utf-8") as archivo:
+    writer = csv.writer(archivo)
+    if escribir_encabezado:
+        writer.writerow(["Archivo", "Accion", "Destino", "Dias desde modificacion"])
+    for file in Files:
+        extension = file.split(".")[-1] 
+        nombre_carpeta = carpeta.get(extension)
+        if nombre_carpeta is not None:
+            destination_folder = os.path.join("archivos_organizados", carpeta[extension])
+            os.makedirs(destination_folder, exist_ok=True)
+
+            principal = os.path.join(source_folder, file)
+            final = os.path.join(destination_folder, file)
+
+            timestamp = os.path.getmtime(principal)
+            modificacion = datetime.fromtimestamp(timestamp)
+            today = datetime.now()
+            diferencia = today - modificacion
+      
+            if diferencia.days > 30:
+                olvidados = os.path.join("archivos_organizados", "OLVIDADOS")
+                os.makedirs(olvidados, exist_ok=True)
+                shutil.move(principal, olvidados)
+            else:
+                shutil.move(principal, final)
+
+            writer.writerows([[file, "movido", destination_folder, diferencia.days]])
+
+#archivo = "archivosPC"
+#timestamp = os.path.getmtime(archivo)
+
+#modificacion = datetime.datetime.fromtimestamp(timestamp)
+#diferencia = today - modificacion
+#print (today)
+#print (modificacion)
+#print (diferencia)
